@@ -1,0 +1,13 @@
+# Local HTTP development. Database credentials come from environment variables
+# through application.yml, including when this profile is active.
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+        same-site: lax
+
+instabazaar:
+  database:
+    bootstrap:
+      enabled: false

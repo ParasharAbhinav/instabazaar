@@ -1,0 +1,8 @@
+target/
+var/
+.env
+.env.*
+!.env.example
+*.log
+*.dumpstream
+.git/

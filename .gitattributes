@@ -1,0 +1,16 @@
+* text=auto eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.java text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.sql text eol=lf
+*.ps1 text eol=lf
+*.sh text eol=lf
+mvnw text eol=lf
+*.cmd text eol=crlf
+# Preserve historical migration content, including trailing blank lines.
+backend/src/main/resources/db/migration/*.sql whitespace=-blank-at-eof
