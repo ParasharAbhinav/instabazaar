@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><body>
+<article th:fragment="product(product)" class="product-card">
+  <a class="product-image" th:href="${product.visible} ? @{/products/{id}(id=${product.id})} : null" th:classappend="${!product.visible} ? ' unavailable'">
+    <img th:src="${product.imageUrl}" th:alt="${product.title}" loading="lazy" width="600" height="800">
+    <span class="image-label" th:if="${product.demo}">Demo illustration</span>
+    <span class="availability-label" th:if="${!product.available}" th:text="${product.visible} ? 'Out of stock' : 'Unavailable'"></span>
+    <span class="image-arrow" th:if="${product.visible}" aria-hidden="true">↗</span>
+  </a>
+  <div class="product-meta"><a th:href="@{/sellers/{id}(id=${product.sellerId})}" th:text="${product.storeName}"></a><span th:text="${product.categoryName}"></span></div>
+  <a class="product-title" th:href="${product.visible} ? @{/products/{id}(id=${product.id})} : null" th:text="${product.title}"></a>
+  <div class="product-bottom"><span class="price">₹<span th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 2, 'POINT')}"></span></span><span class="muted" th:text="${product.colour}"></span></div>
+</article>
+<div th:fragment="empty(title, description)" class="empty-state"><span class="empty-mark" aria-hidden="true">✳</span><h2 th:text="${title}"></h2><p th:text="${description}"></p><a class="button button-outline" th:href="@{/products}">Explore all products</a></div>
+<nav th:fragment="pagination(results, filters)" class="pagination-bar" aria-label="Product pages" th:if="${results.pageCount > 1}">
+  <a class="button button-outline button-small" th:if="${results.page > 0}" th:href="@{/products(q=${filters.q},categoryId=${filters.categoryId},sellerId=${filters.sellerId},minPrice=${filters.minPrice},maxPrice=${filters.maxPrice},colour=${filters.colour},size=${filters.size},available=${filters.available},sort=${filters.sort},page=${results.page - 1})}">← Previous</a>
+  <span th:text="'Page ' + (${results.page} + 1) + ' of ' + ${results.pageCount}"></span>
+  <a class="button button-outline button-small" th:if="${results.page + 1 < results.pageCount}" th:href="@{/products(q=${filters.q},categoryId=${filters.categoryId},sellerId=${filters.sellerId},minPrice=${filters.minPrice},maxPrice=${filters.maxPrice},colour=${filters.colour},size=${filters.size},available=${filters.available},sort=${filters.sort},page=${results.page + 1})}">Next →</a>
+</nav>
+</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Discover the edit')}"></head><body><div th:replace="~{fragments/layout :: header}"></div>
+<main id="main" class="shell section-space"><p class="eyebrow">A LITTLE LESS ORDINARY</p><h1 class="page-title">Find your next <em>favourite.</em></h1><p class="page-intro">Search the details you remember. We’ll help you find the pieces.</p>
+<form th:action="@{/products}" method="get" class="catalogue-form">
+  <div class="search-box catalogue-search"><svg class="icon"><use href="/images/icons.svg#search"></use></svg><label for="catalogue-q" class="visually-hidden">Search products and stores</label><input id="catalogue-q" type="search" name="q" th:value="${filters.q}" maxlength="160" placeholder="A colour, a fabric, a piece, a store…"><button type="submit" aria-label="Search">↗</button></div>
+  <div class="filter-grid">
+    <div><label for="category">Category</label><select id="category" name="categoryId"><option value="">All categories</option><option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == filters.categoryId}"></option></select></div>
+    <div><label for="min-price">Min price (₹)</label><input id="min-price" type="number" min="0" max="9999999999.99" step="0.01" name="minPrice" th:value="${filters.minPrice}" placeholder="0"></div>
+    <div><label for="max-price">Max price (₹)</label><input id="max-price" type="number" min="0" max="9999999999.99" step="0.01" name="maxPrice" th:value="${filters.maxPrice}" placeholder="Any"></div>
+    <div><label for="colour">Colour</label><input id="colour" name="colour" th:value="${filters.colour}" maxlength="50" placeholder="e.g. olive"></div>
+    <div><label for="size">Size</label><input id="size" name="size" th:value="${filters.size}" maxlength="30" placeholder="e.g. M"></div>
+    <div><label for="availability">Availability</label><select id="availability" name="available"><option value="">All listings</option><option value="true" th:selected="${filters.available == true}">In stock</option><option value="false" th:selected="${filters.available == false}">Out of stock</option></select></div>
+    <div><label for="sort">Sort by</label><select id="sort" name="sort"><option value="relevance" th:selected="${filters.sort == 'relevance'}">Most relevant</option><option value="newest" th:selected="${filters.sort == 'newest'}">Newest first</option><option value="price-asc" th:selected="${filters.sort == 'price-asc'}">Price: low to high</option><option value="price-desc" th:selected="${filters.sort == 'price-desc'}">Price: high to low</option></select></div>
+    <input type="hidden" name="sellerId" th:if="${filters.sellerId != null}" th:value="${filters.sellerId}"><button class="button align-self-end" type="submit">Apply filters</button>
+  </div>
+  <div class="filter-footer"><a th:href="@{/products}">Clear all filters</a><span>All search words must match. Title matches rank first, then tags, attributes, stores and descriptions.</span></div>
+</form>
+<div class="results-heading"><p><strong th:text="${results.total}"></strong> <span th:text="${results.total == 1} ? 'find' : 'finds'"></span><span th:if="${!filters.q.isBlank()}" th:text="' for “' + ${filters.q} + '”'"></span></p><a th:href="@{/sellers(q=${filters.q})}">Looking for a seller? ↗</a></div>
+<div class="product-grid" th:unless="${#lists.isEmpty(results.products)}"><th:block th:each="product : ${results.products}"><article th:replace="~{fragments/cards :: product(${product})}"></article></th:block></div>
+<th:block th:if="${#lists.isEmpty(results.products)}"><div th:replace="~{fragments/cards :: empty('Not quite found it?', 'Try fewer words, another colour, or a wider price range. New finds start with a little curiosity.')}"></div></th:block>
+<nav th:replace="~{fragments/cards :: pagination(${results}, ${filters})}"></nav>
+</main><footer th:replace="~{fragments/layout :: footer}"></footer></body></html>
