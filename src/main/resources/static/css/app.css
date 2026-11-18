@@ -203,6 +203,14 @@ input[type=checkbox],input[type=radio] { accent-color:var(--olive); width:16px; 
 .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-block:30px; }
 .stats-grid a { background:var(--soft); padding:25px; font-size:12px; }
 .stats-grid span { display:block; font:55px Georgia,serif; margin-bottom:10px; }
+.video-steps { padding-left:20px; font-size:12px; color:var(--muted); }
+.video-steps li { margin-block:10px; }
+.video-entry { padding:20px; margin-bottom:22px; border:1px solid var(--line); background:var(--soft); }
+.video-entry h2 { font-size:27px; margin-bottom:12px; }
+.visual-suggestion { display:flex; align-items:center; gap:15px; border:1px solid var(--line); padding:16px; cursor:pointer; font-weight:400; }
+.visual-suggestion small { display:block; color:var(--muted); font-size:10px; }
+.visual-suggestion strong { font-size:16px; text-transform:capitalize; }
+.match-score { margin-left:auto; font-size:10px; color:var(--muted); text-align:right; }
 @media (max-width:1050px) {
   .shell { width:calc(100% - 48px); }
   .desktop-nav { gap:18px; }

@@ -3,6 +3,7 @@ package com.instabazaar.controller;
 import com.instabazaar.dto.Forms;
 import com.instabazaar.exception.DomainException;
 import com.instabazaar.service.CatalogService;
+import com.instabazaar.video.VideoJobs;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller @RequestMapping("/seller")
 public class SellerController {
     private final CatalogService catalog;
-    public SellerController(CatalogService catalog) { this.catalog = catalog; }
+    private final VideoJobs videos;
+    public SellerController(CatalogService catalog, VideoJobs videos) { this.catalog = catalog; this.videos = videos; }
 
     @GetMapping({"/dashboard", "/products"}) public String dashboard(Model model) {
         model.addAttribute("products", catalog.ownProducts()); model.addAttribute("store", catalog.ownStore());
@@ -34,31 +36,36 @@ public class SellerController {
         }
         model.addAttribute("store", catalog.ownStore()); return "seller/store-form";
     }
-    @GetMapping("/products/new") public String create(Model model) {
-        model.addAttribute("form", Forms.ProductInput.empty()); model.addAttribute("productId", null); return "seller/product-form";
+    @GetMapping("/products/new") public String create(@RequestParam(required = false) Long videoJobId, Model model) {
+        Forms.ProductInput form = Forms.ProductInput.empty();
+        if (videoJobId != null) form = videos.prefill(form, videoJobId, null);
+        model.addAttribute("form", form); model.addAttribute("productId", null); model.addAttribute("videoJobId", videoJobId); return "seller/product-form";
     }
-    @GetMapping("/products/{id}/edit") public String edit(@PathVariable Long id, Model model) {
-        model.addAttribute("form", catalog.editor(id)); model.addAttribute("productId", id); model.addAttribute("product", catalog.ownProduct(id));
+    @GetMapping("/products/{id}/edit") public String edit(@PathVariable Long id, @RequestParam(required = false) Long videoJobId, Model model) {
+        Forms.ProductInput form = catalog.editor(id);
+        if (videoJobId != null) form = videos.prefill(form, videoJobId, id);
+        model.addAttribute("form", form); model.addAttribute("productId", id); model.addAttribute("product", catalog.ownProduct(id)); model.addAttribute("videoJobId", videoJobId);
         return "seller/product-form";
     }
     @PostMapping("/products") public String create(@Valid @ModelAttribute("form") Forms.ProductInput form, BindingResult errors,
-            @RequestParam(required = false) MultipartFile image, Model model, RedirectAttributes flash) {
-        return save(null, form, errors, image, model, flash);
+            @RequestParam(required = false) MultipartFile image, @RequestParam(required = false) Long videoJobId, Model model, RedirectAttributes flash) {
+        return save(null, form, errors, image, videoJobId, model, flash);
     }
     @PostMapping("/products/{id}") public String edit(@PathVariable Long id, @Valid @ModelAttribute("form") Forms.ProductInput form,
-            BindingResult errors, @RequestParam(required = false) MultipartFile image, Model model, RedirectAttributes flash) {
+            BindingResult errors, @RequestParam(required = false) MultipartFile image, @RequestParam(required = false) Long videoJobId, Model model, RedirectAttributes flash) {
         catalog.ownProduct(id);
-        return save(id, form, errors, image, model, flash);
+        return save(id, form, errors, image, videoJobId, model, flash);
     }
-    private String save(Long id, Forms.ProductInput form, BindingResult errors, MultipartFile image, Model model, RedirectAttributes flash) {
+    private String save(Long id, Forms.ProductInput form, BindingResult errors, MultipartFile image, Long videoJobId, Model model, RedirectAttributes flash) {
         if (!errors.hasErrors()) {
-            try { catalog.save(id, form, image); flash.addFlashAttribute("success", "Your product is saved."); return "redirect:/seller/products"; }
+            try { catalog.save(id, form, image, videoJobId); flash.addFlashAttribute("success", "Your product is saved."); return "redirect:/seller/products"; }
             catch (DomainException exception) {
                 if (exception.getStatus().value() == 403 || exception.getStatus().value() == 404) throw exception;
                 errors.reject("product", exception.getMessage());
             }
         }
         model.addAttribute("productId", id);
+        model.addAttribute("videoJobId", videoJobId);
         if (id != null) model.addAttribute("product", catalog.ownProduct(id));
         return "seller/product-form";
     }

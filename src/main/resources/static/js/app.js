@@ -1,5 +1,19 @@
 'use strict';
 
+if (document.querySelector('[data-video-pending="true"]')) {
+  setTimeout(() => location.reload(), 3000);
+}
+
+document.querySelectorAll('[data-video-input]').forEach(input => {
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    const feedback = input.parentElement.querySelector('.file-feedback');
+    const message = file && file.size > 30 * 1024 * 1024 ? 'Choose an MP4 no larger than 30 MB.' : '';
+    input.setCustomValidity(message);
+    if (feedback) feedback.textContent = message || (file ? 'Selected: ' + file.name : '');
+  });
+});
+
 document.querySelectorAll('[data-image-input]').forEach(input => {
   input.addEventListener('change', () => {
     const file = input.files[0];

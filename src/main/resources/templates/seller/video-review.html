@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Review your video keywords')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<main id="main" class="shell section-space narrow">
+  <p class="eyebrow">YOUR SELLER STUDIO · VIDEO REDISCOVERY</p>
+  <h1 class="page-title">A few clues.<br><em>A better chance to be found.</em></h1>
+  <nav th:replace="~{fragments/layout :: seller-nav}"></nav>
+  <section class="form-panel" th:attr="data-video-pending=${job.pending}">
+    <p class="badge-label" th:text="${job.status}"></p>
+    <p role="status" th:text="${job.message}"></p>
+    <p th:if="${job.pending}" class="field-help">This page refreshes automatically while the job is queued or running. The first analysis loads the local models and prepares the fashion vocabulary.</p>
+    <p class="fine-print" th:if="${job.frameCount > 0}"><span th:text="${job.frameCount}"></span> frames analysed from <span th:text="${#numbers.formatDecimal(job.duration,1,1)}"></span> seconds of video. <span th:text="${modelName}"></span>.</p>
+    <form th:if="${job.status.name() == 'READY' or job.status.name() == 'REVIEWED'}" th:unless="${#lists.isEmpty(job.suggestions)}" th:action="@{/seller/videos/{id}/review(id=${job.id})}" method="post">
+      <h2>Keep only what looks right.</h2>
+      <p class="field-help">Scores describe relative matches within a small candidate vocabulary, not the probability that a tag is correct. Nothing is indexed until you approve tags and save a product.</p>
+      <label class="visual-suggestion" th:each="suggestion : ${job.suggestions}">
+        <input type="checkbox" name="tag" th:value="${suggestion.label}" th:checked="${job.status.name() == 'REVIEWED' and job.approved(suggestion.label)}">
+        <span><small th:text="${suggestion.group}"></small><strong th:text="${suggestion.label}"></strong></span>
+        <span class="match-score" th:text="${#numbers.formatDecimal(suggestion.score * 100,1,0)} + '% relative match'"></span>
+      </label>
+      <p class="field-help">New listings receive a suggested title, category and colour only from approved choices. Existing listing details are not overwritten: check their colour/category yourself. All tags remain editable on the next screen.</p>
+      <button type="submit" class="button">Approve selected tags &amp; review product ↗</button>
+    </form>
+    <p th:if="${job.status.name() == 'APPLIED'}">The product was saved with your final choices. You can edit it at any time.</p>
+    <a th:if="${job.status.name() == 'APPLIED' and job.productId != null}" class="button" th:href="@{/seller/products/{id}/edit(id=${job.productId})}">Edit product ↗</a>
+    <a class="button button-outline" th:href="@{/seller/videos/new(productId=${job.productId})}">Analyse another video</a>
+    <a class="editorial-link" th:href="${job.productId == null} ? @{/seller/products/new} : @{/seller/products/{id}/edit(id=${job.productId})}">Continue without these suggestions</a>
+  </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

@@ -11,10 +11,11 @@ One Spring Boot application, one Maven build, one database. No React, Node serve
 - Real JPEG/PNG/WebP uploads: decoded content and dimensions checked, 5 MB / 20 MP limits, generated storage keys, up to five images, ownership checks and protected media delivery.
 - Weighted database search across title, descriptions, tags, attributes, category and store name; combined price/category/colour/size/stock filters, relevance/price/newest sorting and 12-item pagination.
 - Persistent private wishlists, one review per user/product, self-review prevention, real ratings and administrator moderation.
+- Free offline MP4-to-keywords: local visual inference, private bounded background processing, seller-approved tags, editable product prefill and searchable saved attributes. See [docs/VIDEO-TAGGING.md](docs/VIDEO-TAGGING.md).
 - Administration with catalogue statistics, paginated account/product/review lists, confirmed deactivation/visibility changes and subsequent-request session invalidation for inactive accounts.
 - Responsive, accessible Thymeleaf pages with a locally served Bootstrap 5 stylesheet and boutique illustrations. No external fonts, scripts or image services are needed.
 
-Structured order requests, payments, semantic/image search and automatic social-account import are **not implemented**. This is a discovery/contact MVP, not a checkout or seller-verification service.
+Structured order requests, payments, semantic buyer search, screenshot search and automatic social-account import are **not implemented**. Offline visual tagging is available for uploaded videos; this is a discovery/contact MVP, not a checkout or seller-verification service.
 
 ## Requirements
 
@@ -81,7 +82,7 @@ java -jar target\instabazaar-1.0.0-SNAPSHOT.jar
 
 The default isolated test profile uses in-memory H2 in MySQL compatibility mode, real Flyway migrations, JPA and Spring Security. Tests cover rendered public/seller/admin pages, auth and CSRF, safe registration, product validation/ownership/images, relevance/filters/sorting/pagination, wishlists, reviews/ratings/moderation, URL validation and traversal rejection.
 
-The suite also includes a real embedded-server HTTP regression test for committed data, detached entities, sessions, CSRF and multipart WebP upload. The current verified result is **51 passing tests**; see [docs/VERIFICATION.md](docs/VERIFICATION.md) for actual database coverage and limitations.
+The suite also includes real embedded-server HTTP tests for committed data, detached entities, sessions, CSRF and multipart uploads. Offline video inference and its real upload/approval/search workflow can be tested after asset setup with `verify '-Dvideo.model.tests=true'`; those external-asset tests are explicitly opt-in. See [docs/VERIFICATION.md](docs/VERIFICATION.md) and [docs/VIDEO-TAGGING.md](docs/VIDEO-TAGGING.md) for coverage and limitations.
 
 To run the **same integration tests against an actual disposable MySQL 8 database**, create a separate empty test schema/account and set:
 
@@ -115,6 +116,7 @@ No secrets, local databases, uploaded media, logs or build output are committed.
 - Public: `/`, `/products`, `/products/{id}`, `/categories/{id}`, `/sellers`, `/sellers/{id}`, `/login`, `/register`.
 - Buyer features: `/wishlist`, `/profile`, product review submission/removal.
 - Seller: `/seller/dashboard`, `/seller/store`, `/seller/products`, `/seller/products/new`, `/seller/products/{id}/edit`.
+- Video tagging: `/seller/videos/new`, `/seller/videos/{id}`; seller-only upload, processing and review.
 - Admin: `/admin`, `/admin/users`, `/admin/products`, `/admin/reviews`.
 - Media: `/media/{generated-key}`; visibility is checked against the owning product/account, not just the URL.
 
@@ -128,6 +130,7 @@ Search removes common stop words and handles up to 16 distinct query tokens; all
 - **Connection refused / access denied:** start MySQL, check DB_URL, create the schema and user, and verify the user's host/grants. The normal profile intentionally does not fall back to H2.
 - **Port already used:** stop the previous app or set PORT to another port. Only one demo process can open the same H2 file at a time.
 - **Sign-in or upload fails:** obtain a fresh form/session; CSRF protection is enabled. Uploads must be actual supported images, not renamed files; up to 5 MB each. The storage directory must be writable.
+- **Video tools missing:** run `scripts/setup-video.ps1`, restart the app, and use a seller account. MP4 limits are 30 MB / 60 seconds / 1080p; manual entry still works without the optional local model installation.
 - **Flyway/schema mismatch:** use a new schema for this implementation. Never edit an already-applied migration or point it at the upstream PostgreSQL database. See the migration audit before moving real data.
 - **No sample login:** register your own account or set DEMO_PASSWORD before first seed. Sample products are not real inventory or offers for sale.
 - **Production:** configure HTTPS/secure cookies, a production MySQL account, backup/restore, monitoring and operational rate limiting before public deployment. This local MVP is not a claim of production hardening or external seller verification.

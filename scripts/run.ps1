@@ -7,7 +7,7 @@ Set-Location -LiteralPath $projectRoot
 
 $environmentFile = Join-Path $projectRoot '.env'
 if (Test-Path -LiteralPath $environmentFile) {
-    $allowed = @('DB_URL', 'DB_USERNAME', 'DB_PASSWORD', 'UPLOAD_DIR', 'BIND_ADDRESS', 'SESSION_COOKIE_SECURE', 'DEMO_PASSWORD', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'PORT')
+    $allowed = @('DB_URL', 'DB_USERNAME', 'DB_PASSWORD', 'UPLOAD_DIR', 'BIND_ADDRESS', 'SESSION_COOKIE_SECURE', 'DEMO_PASSWORD', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'PORT', 'VIDEO_MODEL_DIR', 'VIDEO_WORK_DIR', 'VIDEO_FFMPEG', 'VIDEO_FFPROBE')
     foreach ($line in Get-Content -LiteralPath $environmentFile) {
         if ($line -match '^\s*([A-Z_]+)=(.*)$' -and $allowed -contains $Matches[1]) {
             Set-Item -LiteralPath "Env:$($Matches[1])" -Value $Matches[2]

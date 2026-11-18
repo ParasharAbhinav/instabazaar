@@ -15,7 +15,7 @@ public class PageExceptionHandler {
     @ExceptionHandler(DomainException.class) public ModelAndView domain(DomainException exception) { return error(exception.getStatus(), exception.getMessage()); }
     @ExceptionHandler({ConstraintViolationException.class, MethodArgumentNotValidException.class})
     public ModelAndView validation(Exception exception) { return error(HttpStatus.BAD_REQUEST, "Some details are invalid. Go back, check the form, and try again."); }
-    @ExceptionHandler(MaxUploadSizeExceededException.class) public ModelAndView upload() { return error(HttpStatus.PAYLOAD_TOO_LARGE, "Image uploads must not exceed 5 MB."); }
+    @ExceptionHandler(MaxUploadSizeExceededException.class) public ModelAndView upload() { return error(HttpStatus.PAYLOAD_TOO_LARGE, "Upload too large. Images are limited to 5 MB; MP4 videos to 30 MB."); }
     @ExceptionHandler({DataIntegrityViolationException.class, OptimisticLockingFailureException.class})
     public ModelAndView conflict(Exception exception) { return error(HttpStatus.CONFLICT, "This information was saved or changed by another request. Reload and try again."); }
     @ExceptionHandler(AccessDeniedException.class) public ModelAndView denied() { return error(HttpStatus.FORBIDDEN, "You do not have access to this action."); }

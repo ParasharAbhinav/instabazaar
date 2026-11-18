@@ -8,6 +8,7 @@ import com.instabazaar.exception.DomainException;
 import com.instabazaar.repository.*;
 import com.instabazaar.security.CurrentAccount;
 import com.instabazaar.util.*;
+import com.instabazaar.video.VideoJobs;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.springframework.data.domain.PageRequest;
@@ -28,11 +29,12 @@ public class CatalogService {
     private final ViewMapper mapper;
     private final TagSuggestionService suggestions;
     private final MediaStorage storage;
+    private final VideoJobs videos;
 
     public CatalogService(ProductRepository products, CategoryRepository categories, SellerRepository sellers,
-                          CurrentAccount current, ViewMapper mapper, TagSuggestionService suggestions, MediaStorage storage) {
+                          CurrentAccount current, ViewMapper mapper, TagSuggestionService suggestions, MediaStorage storage, VideoJobs videos) {
         this.products = products; this.categories = categories; this.sellers = sellers; this.current = current;
-        this.mapper = mapper; this.suggestions = suggestions; this.storage = storage;
+        this.mapper = mapper; this.suggestions = suggestions; this.storage = storage; this.videos = videos;
     }
 
     public List<Views.CategoryView> categories() {
@@ -122,6 +124,13 @@ public class CatalogService {
 
     @Transactional @PreAuthorize("hasRole('SELLER')")
     public void archive(Long id) { ownedForUpdate(id).status = ListingStatus.ARCHIVED; }
+
+    @Transactional @PreAuthorize("hasRole('SELLER')")
+    public Long save(Long id, @Valid Forms.ProductInput form, MultipartFile image, Long videoJobId) {
+        Long savedId = save(id, form, image);
+        if (videoJobId != null) videos.attach(videoJobId, id, products.findById(savedId).orElseThrow(DomainException::missing));
+        return savedId;
+    }
 
     @Transactional @PreAuthorize("hasRole('SELLER')")
     public void removeImage(Long productId, String key) {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Turn a product video into keywords')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<main id="main" class="shell section-space">
+  <p class="eyebrow">YOUR SELLER STUDIO · FREE, LOCAL VISUAL TAGGING</p>
+  <h1 class="page-title">From a little video<br>to a <em>findable piece.</em></h1>
+  <nav th:replace="~{fragments/layout :: seller-nav}"></nav>
+  <p class="page-intro">Upload a short video of one product. A model running on this computer looks at four frames and suggests a product type, colour and appearance. No API key, paid service, audio transcription or social-media scraping.</p>
+  <div class="notice notice-error" th:unless="${available}">Offline tools or model files are not installed yet. On the application computer, run <code>powershell -ExecutionPolicy Bypass -File scripts/setup-video.ps1</code>, then restart the app. Manual product entry remains available.</div>
+  <div class="editor-layout">
+    <form class="form-panel" th:action="@{/seller/videos}" method="post" enctype="multipart/form-data">
+      <input th:if="${productId != null}" type="hidden" name="productId" th:value="${productId}">
+      <h2 th:text="${productId == null} ? 'Start with the video.' : 'Add keywords to your listing.'"></h2>
+      <p th:if="${productId != null}">Product: <strong th:text="${product.title}"></strong></p>
+      <label for="video">Original MP4</label>
+      <input id="video" type="file" name="video" accept="video/mp4,.mp4" required data-video-input>
+      <p class="field-help">Up to 30 MB, 60 seconds and 1920×1080 pixels (or 1080×1920). Keep the product clearly visible. One product per clip; avoid rapid cuts, heavy overlays and multiple outfits.</p>
+      <p class="file-feedback" aria-live="polite"></p>
+      <label class="checkbox-label"><input type="checkbox" name="rights" value="true" required> I own this video or have permission to process it.</label>
+      <label class="checkbox-label"><input type="checkbox" name="singleProduct" value="true" required> This clip is about one product, not a multi-product collection.</label>
+      <button type="submit" class="button" th:disabled="${!available}">Suggest visual keywords ↗</button>
+      <a class="button button-outline" th:href="${productId == null} ? @{/seller/products/new} : @{/seller/products/{id}/edit(id=${productId})}">Use manual entry</a>
+    </form>
+    <aside class="editor-note">
+      <p class="eyebrow">YOUR VIDEO STAYS PRIVATE</p>
+      <h3>Look. Suggest. You decide.</h3>
+      <ol class="video-steps"><li>Four representative frames are extracted locally.</li><li>A pretrained visual model compares them with a fixed fashion vocabulary.</li><li>You approve only the useful tags.</li><li>Review the product form and save it to make the keywords searchable.</li></ol>
+      <p>The original upload and temporary frames are deleted after processing. They are never published or sent to a hosted AI service.</p>
+      <p>Suggestions can be wrong. The model does not establish fabric composition, stock, price, identity or purchase verification. CPU processing may take longer on the first run.</p>
+      <p class="fine-print">One analysis at a time per seller; ten uploads per seller in 24 hours. The local worker processes one video at a time with a short bounded queue.</p>
+    </aside>
+  </div>
+  <section class="review-section" th:unless="${#lists.isEmpty(recent)}">
+    <h2>Your recent analyses.</h2>
+    <div class="table-responsive"><table class="workspace-table"><thead><tr><th>Analysis</th><th>Status</th><th>Next step</th></tr></thead><tbody><tr th:each="analysis : ${recent}"><td th:text="'Video #' + ${analysis.id}"></td><td th:text="${analysis.status}"></td><td><a th:href="@{/seller/videos/{id}(id=${analysis.id})}">View analysis ↗</a></td></tr></tbody></table></div>
+  </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

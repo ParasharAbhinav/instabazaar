@@ -37,3 +37,7 @@ This is a new implementation in the initially empty local workspace, **not** an 
 9. Optional extensions: intentionally deferred. No semantic/image search, Instagram synchronization, order requests, payments or cart is represented as implemented.
 
 There is no silent account verification, fabricated purchase verification, fake review generation or hardcoded production password. SVGs are labelled illustrations and sample products/stores are explicitly labelled demo content.
+
+## Follow-up: offline video rediscovery
+
+The original migration's optional AI boundary has now been extended with local MP4 visual tagging. CLIP/ONNX Runtime and FFmpeg suggest a fixed vocabulary without a paid API, and seller approval/product save are required before indexing. Migration V3 adds private analysis job metadata without altering existing products. Automatic Instagram import, audio transcription, semantic query search, buyer screenshot search and multi-product video segmentation remain deferred. See VIDEO-TAGGING.md for setup, permissions, limits and model provenance.
