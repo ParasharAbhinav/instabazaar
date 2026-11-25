@@ -2,7 +2,7 @@
 <article th:fragment="product(product)" class="product-card">
   <a class="product-image" th:href="${product.visible} ? @{/products/{id}(id=${product.id})} : null" th:classappend="${!product.visible} ? ' unavailable'">
     <img th:src="${product.imageUrl}" th:alt="${product.title}" loading="lazy" width="600" height="800">
-    <span class="image-label" th:if="${product.demo}">Demo illustration</span>
+    <span class="image-label" th:if="${product.demo}">Demo listing</span>
     <span class="availability-label" th:if="${!product.available}" th:text="${product.visible} ? 'Out of stock' : 'Unavailable'"></span>
     <span class="image-arrow" th:if="${product.visible}" aria-hidden="true">↗</span>
   </a>

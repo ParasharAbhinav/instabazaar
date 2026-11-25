@@ -60,13 +60,13 @@ For an explicitly opt-in local demonstration:
 powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 -Demo
 ```
 
-Or `.\mvnw.cmd spring-boot:run '-Dspring-boot.run.profiles=demo'`. This profile uses a persistent local **H2** database at `data/instabazaar`, not MySQL, and imports six clearly marked fictional listings and two fictional stores. It is not the production database configuration.
+Or `.\mvnw.cmd spring-boot:run '-Dspring-boot.run.profiles=demo'`. This profile uses a persistent local **H2** database at `data/instabazaar`, not MySQL. A fresh database imports six original illustrated listings plus ten photo-backed listings across three fictional stores. Existing demo databases receive the ten additional listings without replacing their products or accounts; repeated startup does not duplicate them. It is not the production database configuration.
 
 The launch script can discover the portable Java 21 installation in `%LOCALAPPDATA%\InstaBazaar\tools` prepared during this build; otherwise install Java 21 normally.
 
-For the same sample catalogue on MySQL, use `scripts/run.ps1 -Dev` or `spring-boot:run '-Dspring-boot.run.profiles=dev'` with MySQL settings. Demo accounts are `seller@example.test`, `edit@example.test` and `buyer@example.test`. Set **DEMO_PASSWORD** to your own password of at least 12 characters **before the first seeded startup** to enable their login. Without it they receive an unknown random password; register your own account instead. Changing DEMO_PASSWORD later does not reset existing users.
+For the same sample catalogue on MySQL, use `scripts/run.ps1 -Dev` or `spring-boot:run '-Dspring-boot.run.profiles=dev'` with MySQL settings. Demo accounts are `seller@example.test`, `edit@example.test`, `trail@example.test` and `buyer@example.test`. Set **DEMO_PASSWORD** to your own password of at least 12 characters **before the account's first seeded startup** to enable its login. Without it new accounts receive an unknown random password; register your own account instead. Changing DEMO_PASSWORD later does not reset existing users.
 
-We do not seed fake reviews or fabricated social-post URLs. Sample illustration files and the original catalogue were preserved from the existing repository; see [docs/MIGRATION.md](docs/MIGRATION.md).
+We do not seed fake reviews or fabricated social-post URLs. Sample illustration files and the original catalogue were preserved from the existing repository; see [docs/MIGRATION.md](docs/MIGRATION.md). The ten additional listings use distinct locally bundled stock photographs, with sources in [docs/DEMO-PHOTOS.md](docs/DEMO-PHOTOS.md). They include clothing, footwear and accessories, meaningful search tags and sample prices/stock, not real offers for sale. The demo seeder adds Accessories and Footwear categories if absent; production seeding remains disabled.
 
 ## Create an administrator explicitly
 

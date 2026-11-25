@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     List<Product> findBySellerUserIdOrderByCreatedAtDesc(Long userId);
+    boolean existsBySellerIdAndDemoTrueAndIllustration(Long sellerId, String illustration);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select product from Product product where product.id = :id")
     Optional<Product> lockById(Long id);

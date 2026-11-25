@@ -14,6 +14,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class WebFlowIntegrationTest extends ApplicationTestSupport {
+    @Test void authenticationFormsMarkRequiredFields() throws Exception {
+        for (String route : List.of("/register", "/login")) {
+            String page = mvc.perform(get(route)).andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            assertThat(page).contains("Required fields");
+            List<String> fields = route.equals("/register") ? List.of("displayName", "email", "password") : List.of("email", "password");
+            for (String field : fields) {
+                assertThat(page).containsPattern("<label for=\"" + field + "\">[^<]+ <span class=\"required-marker\" aria-hidden=\"true\">\\*</span></label>");
+                assertThat(page).containsPattern("<input id=\"" + field + "\"[^>]*\\brequired(?:=\"required\")?[^>]*>");
+            }
+        }
+    }
+
     @Test void publicPagesAndAssetsRender() throws Exception {
         for (String route : List.of("/", "/products", "/products?q=red+dress+for+a+party", "/products?q=nothingmatches", "/sellers", "/login", "/register", "/register?role=SELLER", "/css/app.css", "/js/app.js", "/vendor/bootstrap.min.css", "/images/hero.svg", "/images/icons.svg")) {
             mvc.perform(get(route)).andExpect(status().isOk());

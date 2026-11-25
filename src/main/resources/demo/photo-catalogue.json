@@ -1,0 +1,99 @@
+{
+  "sellers": [
+    {"name": "Sample Seller", "email": "seller@example.test", "storeName": "Sample Loom Studio"},
+    {"name": "Sample Boutique", "email": "edit@example.test", "storeName": "The Everyday Edit"},
+    {"name": "Sample Outfitter", "email": "trail@example.test", "storeName": "Urban Trail Outfitters"}
+  ],
+  "products": [
+    {
+      "sellerEmail": "seller@example.test", "category": "Casual wear",
+      "title": "Light Blue Denim Jacket", "price": "1899.00", "colour": "light blue",
+      "material": "Cotton denim", "occasion": "Casual", "sizes": "S, M, L, XL", "stock": 8,
+      "description": "A light-wash denim jacket with a collared neckline and button front for everyday layering. Cold wash inside out.",
+      "caption": "Light blue denim jacket for casual weekend layering. #denim #jacket #lightblue",
+      "tags": ["light blue", "denim", "jacket", "layering", "casual", "collared"],
+      "photo": "demo/denim-jacket.jpg"
+    },
+    {
+      "sellerEmail": "seller@example.test", "category": "Tops",
+      "title": "Cream Graphic Cotton T-Shirt", "price": "699.00", "colour": "cream",
+      "material": "Cotton jersey", "occasion": "Everyday", "sizes": "S, M, L, XL", "stock": 20,
+      "description": "Cream short-sleeve crew-neck T-shirt with a bold blue graphic print. A relaxed everyday staple; wash inside out with similar colours.",
+      "caption": "Cream tee with blue graphic print and short sleeves. #graphictee #cotton #streetwear",
+      "tags": ["cream", "blue print", "graphic", "t-shirt", "cotton", "crew neck", "streetwear"],
+      "photo": "demo/printed-tshirt.jpg"
+    },
+    {
+      "sellerEmail": "seller@example.test", "category": "Tops",
+      "title": "Ivory Fringe Knit Poncho", "price": "1299.00", "colour": "ivory",
+      "material": "Cotton blend knit", "occasion": "Winter layering", "sizes": "ONE SIZE", "stock": 6,
+      "description": "An ivory open-knit poncho with a V neckline and fringed hem. A loose silhouette for cool-weather layering. Gentle hand wash and dry flat.",
+      "caption": "Ivory knit poncho with fringe detail for cosy layering. #poncho #knitwear #fringe",
+      "tags": ["ivory", "cream", "poncho", "knitwear", "fringe", "v neck", "winter"],
+      "photo": "demo/knit-sweater.jpg"
+    },
+    {
+      "sellerEmail": "edit@example.test", "category": "Accessories",
+      "title": "Black Quilted Chain Shoulder Bag", "price": "2199.00", "colour": "black",
+      "material": "Faux leather", "occasion": "Evening", "sizes": "ONE SIZE", "stock": 5,
+      "description": "Black shoulder-bag styling with chevron quilting and gold-tone chain detailing. Compact occasion accessory. Wipe gently with a soft dry cloth.",
+      "caption": "Black quilted shoulder bag with gold-tone chain detail. #blackbag #quilted #evening",
+      "tags": ["black", "handbag", "shoulder bag", "quilted", "chain", "gold tone", "evening"],
+      "photo": "demo/black-handbag.jpg"
+    },
+    {
+      "sellerEmail": "edit@example.test", "category": "Accessories",
+      "title": "Coral Structured Top-Handle Bag", "price": "1799.00", "colour": "coral red",
+      "material": "Faux leather", "occasion": "Workwear", "sizes": "ONE SIZE", "stock": 7,
+      "description": "A coral-red structured handbag with a top handle and front clasp. A bright accent for daytime outfits. Store in a dust bag away from direct sunlight.",
+      "caption": "Coral red structured top-handle handbag for daytime styling. #coral #handbag #tophandle",
+      "tags": ["coral", "red", "handbag", "top handle", "structured", "clasp", "workwear"],
+      "photo": "demo/everyday-bag.jpg"
+    },
+    {
+      "sellerEmail": "edit@example.test", "category": "Accessories",
+      "title": "Round Green-Lens Sunglasses", "price": "899.00", "colour": "green and gold",
+      "material": "Metal frame", "occasion": "Travel", "sizes": "ONE SIZE", "stock": 12,
+      "description": "Round sunglasses with green-tinted lenses and a slim gold-tone metal frame. Fashion accessory; no certified UV-protection claim is made for this demo listing.",
+      "caption": "Round green-tinted sunglasses with a gold-tone frame. #sunglasses #roundframe #travel",
+      "tags": ["green", "gold", "round", "sunglasses", "eyewear", "metal frame", "travel"],
+      "photo": "demo/sunglasses.jpg"
+    },
+    {
+      "sellerEmail": "trail@example.test", "category": "Footwear",
+      "title": "Red Mesh Lace-Up Trainers", "price": "2499.00", "colour": "red",
+      "material": "Mesh upper and rubber sole", "occasion": "Sportswear", "sizes": "UK 6, UK 7, UK 8, UK 9, UK 10", "stock": 10,
+      "description": "Red low-top trainers with a mesh-style upper, lace-up fastening and contrasting white sole. A sports-inspired demonstration listing, not a performance endorsement.",
+      "caption": "Red mesh trainers with laces and a white sole. #redshoes #trainers #sportswear",
+      "tags": ["red", "trainers", "sneakers", "shoes", "mesh", "lace up", "white sole", "sportswear"],
+      "photo": "demo/red-trainers.jpg"
+    },
+    {
+      "sellerEmail": "trail@example.test", "category": "Footwear",
+      "title": "Burgundy Canvas Low-Top Sneakers", "price": "1599.00", "colour": "burgundy",
+      "material": "Canvas upper and rubber sole", "occasion": "Casual", "sizes": "UK 5, UK 6, UK 7, UK 8, UK 9", "stock": 14,
+      "description": "Burgundy canvas sneakers with white laces, a contrasting side stripe and white rubber sole. Low-top casual styling; spot clean gently.",
+      "caption": "Burgundy canvas low-top sneakers with a white stripe. #burgundy #canvas #sneakers",
+      "tags": ["burgundy", "maroon", "canvas", "sneakers", "shoes", "low top", "white stripe", "casual"],
+      "photo": "demo/canvas-sneakers.jpg"
+    },
+    {
+      "sellerEmail": "trail@example.test", "category": "Accessories",
+      "title": "Navy Everyday Zip Backpack", "price": "1399.00", "colour": "navy blue",
+      "material": "Woven polyester", "occasion": "College and travel", "sizes": "ONE SIZE", "stock": 9,
+      "description": "A navy-blue backpack with a top handle, zip closure and front zip pocket. Everyday styling for college or short trips. Capacity and laptop fit are not certified in this demo.",
+      "caption": "Navy blue zip backpack for college and everyday travel. #backpack #navy #college",
+      "tags": ["navy", "blue", "backpack", "bag", "zip", "college", "travel", "front pocket"],
+      "photo": "demo/backpack.jpg"
+    },
+    {
+      "sellerEmail": "trail@example.test", "category": "Accessories",
+      "title": "Minimal White-Strap Watch Duo", "price": "1999.00", "colour": "white",
+      "material": "Metal case and synthetic strap", "occasion": "Everyday", "sizes": "ADJUSTABLE", "stock": 4,
+      "description": "A minimalist watch duo with white straps, round silver-tone cases and contrasting light and dark dials. Fictional set listing; no water-resistance or mechanism certification is claimed.",
+      "caption": "Minimal white-strap watch duo with round light and dark dials. #watch #minimal #whitestrap",
+      "tags": ["white", "watch", "duo", "round dial", "minimal", "silver tone", "accessories"],
+      "photo": "demo/minimal-watch.jpg"
+    }
+  ]
+}

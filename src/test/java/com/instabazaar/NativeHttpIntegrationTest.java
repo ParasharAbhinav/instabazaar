@@ -30,7 +30,7 @@ class NativeHttpIntegrationTest {
     @Test void actualServerHandlesDetachedEntitiesSessionsCsrfAndMultipartUploads() throws Exception {
         var home = get("/");
         assertThat(home.statusCode()).isEqualTo(200);
-        assertThat(home.body()).contains("Sample Loom Studio", "Demo illustration").doesNotContain("The next great find starts with you.");
+        assertThat(home.body()).contains("Demo listing", "/images/demo/").doesNotContain("The next great find starts with you.");
         String email = "http-" + UUID.randomUUID() + "@example.test";
         String password = UUID.randomUUID() + "Aa!";
         var registration = post("/register", Map.of("_csrf", token(get("/register").body()), "displayName", "HTTP Seller", "email", email, "password", password, "role", "SELLER"));

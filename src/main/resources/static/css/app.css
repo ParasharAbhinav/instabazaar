@@ -102,6 +102,7 @@ img { display:block; max-width:100%; height:auto; }
 .catalogue-search { max-width:740px; margin-block:32px; }
 .filter-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 18px; }
 label,legend { display:block; font-size:12px; font-weight:600; margin:16px 0 7px; }
+.required-marker { color:var(--accent); font-size:.85em; font-weight:700; }
 input:not([type=checkbox]):not([type=radio]),select,textarea { width:100%; border:1px solid #bfc4b4; background:#fffef9; color:var(--ink); padding:11px 12px; border-radius:0; line-height:1.6; }
 input::placeholder,textarea::placeholder { color:#808475; }
 textarea { resize:vertical; }

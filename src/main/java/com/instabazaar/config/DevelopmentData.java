@@ -5,7 +5,6 @@ import com.instabazaar.entity.*;
 import com.instabazaar.enums.Role;
 import com.instabazaar.repository.*;
 import com.instabazaar.service.TagSuggestionService;
-import com.instabazaar.util.Text;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -43,15 +42,20 @@ public class DevelopmentData implements ApplicationRunner {
         this.demoPassword = demoPassword; this.adminEmail = adminEmail; this.adminPassword = adminPassword; this.seedDemo = seedDemo;
     }
 
-    @Override @Transactional public void run(ApplicationArguments arguments) throws Exception {
+    @Override @Transactional(rollbackFor = Exception.class) public void run(ApplicationArguments arguments) throws Exception {
         if (!adminEmail.isBlank() && !adminPassword.isBlank() && !users.existsByEmail(adminEmail.strip().toLowerCase(Locale.ROOT))) {
             validatePassword(adminPassword);
             if (!adminEmail.matches("[^\\s@]+@[^\\s@]+\\.[^\\s@]+") || adminEmail.length() > 190) throw new IllegalStateException("ADMIN_EMAIL is invalid.");
             createUser("Administrator", adminEmail.strip().toLowerCase(Locale.ROOT), Role.ADMIN, adminPassword, false);
         }
-        if (!seedDemo || users.existsByEmail("seller@example.test")) return;
+        if (!seedDemo) return;
         String password = demoPassword.isBlank() ? UUID.randomUUID().toString() : demoPassword;
         validatePassword(password);
+        if (!users.existsByEmail("seller@example.test")) seedOriginalCatalogue(password);
+        seedPhotoCatalogue(password);
+    }
+
+    private void seedOriginalCatalogue(String password) throws Exception {
         var first = createStore(createUser("Sample Seller", "seller@example.test", Role.SELLER, password, true), "Sample Loom Studio");
         var second = createStore(createUser("Sample Boutique", "edit@example.test", Role.SELLER, password, true), "The Everyday Edit");
         createUser("Sample Buyer", "buyer@example.test", Role.BUYER, password, true);
@@ -74,6 +78,51 @@ public class DevelopmentData implements ApplicationRunner {
                 Set<String> tags = new LinkedHashSet<>(); item.get("sellerTags").forEach(tag -> tags.add(tag.asText()));
                 tags.addAll(suggestions.suggest(product.getTitle() + " " + product.getCaption()));
                 for (String label : tags) { ProductTag tag = new ProductTag(); tag.product = product; tag.label = label; product.getTags().add(tag); }
+                products.save(product);
+            }
+        }
+    }
+
+    private void seedPhotoCatalogue(String password) throws Exception {
+        try (var stream = new ClassPathResource("demo/photo-catalogue.json").getInputStream()) {
+            var catalogue = json.readTree(stream);
+            Map<String, SellerProfile> stores = new LinkedHashMap<>();
+            for (var item : catalogue.get("sellers")) {
+                String email = item.get("email").asText();
+                AppUser user = users.findByEmail(email).orElseGet(() ->
+                        createUser(item.get("name").asText(), email, Role.SELLER, password, true));
+                if (!user.getDemo() || user.getRole() != Role.SELLER) {
+                    throw new IllegalStateException("Cannot attach demo listings to a non-demo seller: " + email);
+                }
+                stores.put(email, sellers.findByUserId(user.getId()).orElseGet(() ->
+                        createStore(user, item.get("storeName").asText())));
+            }
+            for (var item : catalogue.get("products")) {
+                SellerProfile store = stores.get(item.get("sellerEmail").asText());
+                String photo = item.get("photo").asText();
+                if (products.existsBySellerIdAndDemoTrueAndIllustration(store.getId(), photo)) continue;
+                if (!new ClassPathResource("static/images/" + photo).exists()) {
+                    throw new IllegalStateException("Missing demo product photograph: " + photo);
+                }
+                String categoryName = item.get("category").asText();
+                Category category = categories.findByName(categoryName).orElseGet(() -> {
+                    Category added = new Category(); added.name = categoryName; return categories.save(added);
+                });
+                Product product = new Product();
+                product.seller = store; product.category = category; product.title = item.get("title").asText();
+                product.description = item.get("description").asText()
+                        + " Fictional demo listing with a representative stock photograph, not actual seller inventory."
+                        + " Any visible brand marks do not imply affiliation or verified authenticity.";
+                product.price = new BigDecimal(item.get("price").asText());
+                product.colour = item.get("colour").asText(); product.material = item.get("material").asText();
+                product.occasion = item.get("occasion").asText(); product.sizes = item.get("sizes").asText();
+                product.stock = item.get("stock").asInt(); product.caption = item.get("caption").asText();
+                product.illustration = photo; product.demo = true;
+                Set<String> tags = new LinkedHashSet<>(); item.get("tags").forEach(tag -> tags.add(tag.asText()));
+                tags.addAll(suggestions.suggest(product.getTitle() + " " + product.getCaption()));
+                for (String label : tags) {
+                    ProductTag tag = new ProductTag(); tag.product = product; tag.label = label; product.tags.add(tag);
+                }
                 products.save(product);
             }
         }
